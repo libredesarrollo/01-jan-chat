@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask the LLM (Fetch)</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        textarea { width: 100%; box-sizing: border-box; }
+        button { margin-top: 10px; padding: 8px 15px; }
+        #response-output { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background-color: #f4f4f4; 
+            border-radius: 5px; 
+            white-space: pre-wrap; /* Para respetar saltos de línea */
+        }
+    </style>
+</head>
+<body>
+    <h1>Pregúntale al LLM</h1>
+    
+    <textarea id="prompt-input" rows="4" placeholder="Escribe tu pregunta aquí..."></textarea>
+    <br>
+    <button id="submit-btn">Enviar</button>
+
+    <h2>Respuesta:</h2>
+    <pre id="response-output">La respuesta del modelo aparecerá aquí...</pre>
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            const promptInput = document.getElementById('prompt-input');
+            const responseOutput = document.getElementById('response-output');
+            const prompt = promptInput.value;
+
+            if (!prompt.trim()) {
+                responseOutput.textContent = 'Por favor, escribe una pregunta.';
+                return;
+            }
+
+            responseOutput.textContent = 'Pensando...';
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `Error del servidor: ${response.status}`);
+                }
+                
+                const messageContent = data.choices[0].message.content;
+                responseOutput.textContent = messageContent;
+            } catch (error) {
+                responseOutput.textContent = `Error al contactar al servidor: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
