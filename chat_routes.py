@@ -17,6 +17,7 @@ def ask_model():
 
     # Cuerpo de la petición
     data = {
+        # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible en Jan
         "model": "gemma-3-12b-it-IQ4_XS", # Asegúrate que este modelo esté disponible en Jan
         "messages": [
             {"role": "user", "content": prompt}
@@ -30,7 +31,7 @@ def ask_model():
 @chat_bp.route("/ask-image", methods=['GET', 'POST'])
 def ask_model_image():
     data = {
-        "model": "llava-v1.5-7b-q4", # Asegúrate de usar un modelo multimodal
+        "model": "gemma-3-12b-it-IQ4_XS", # Asegúrate de usar un modelo multimodal
         "messages": [
             {
                 "role": "user",

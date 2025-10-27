@@ -136,7 +136,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     // Enviamos el historial para que el LLM tenga contexto
                     body: JSON.stringify({ 
-                        messages: chatHistory.map(msg => ({ role: msg.sender, content: msg.text }))
+                        prompt: chatHistory[chatHistory.length - 1].text,
+                        //current_prompt: prompt
+                        //prompt: chatHistory.map(msg => ({ role: msg.sender, content: msg.text })) 
+                        //prompt: promptInput.value.trim()
                     })
                 });
 
