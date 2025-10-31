@@ -2,7 +2,10 @@ import requests
 
 # Constantes para la configuración de la API de Jan.AI
 
-API_URL = "http://127.0.0.1:1337/v1/chat/completions"
+JAN_BASE_URL = "http://127.0.0.1:1337/v1"
+CHAT_COMPLETIONS_URL = f"{JAN_BASE_URL}/chat/completions"
+MODELS_URL = f"{JAN_BASE_URL}/models"
+
 JAN_API_KEY = "12345"  # La clave de autorización
 
 def call_jan_api(data):
@@ -22,7 +25,31 @@ def call_jan_api(data):
     }
 
     try:
-        response = requests.post(API_URL, headers=headers, json=data, stream=False)
+        response = requests.post(CHAT_COMPLETIONS_URL, headers=headers, json=data, stream=False)
+        response.raise_for_status()  # Lanza una excepción para respuestas 4xx/5xx
+        return response.json(), response.status_code
+    except requests.exceptions.RequestException as e:
+        # Captura errores de conexión, timeouts, etc.
+        error_message = {
+            "error": f"Error al contactar el servidor de Jan.AI: {e}",
+            "body": str(e)
+        }
+        return error_message, 500
+
+def get_models():
+    """
+    Obtiene la lista de modelos disponibles desde la API de Jan.AI.
+
+    Returns:
+        tuple: Una tupla conteniendo la respuesta JSON y el código de estado.
+               En caso de error de conexión, devuelve un diccionario de error y 500.
+    """
+    headers = {
+        "Authorization": f"Bearer {JAN_API_KEY}"
+    }
+
+    try:
+        response = requests.get(MODELS_URL, headers=headers)
         response.raise_for_status()  # Lanza una excepción para respuestas 4xx/5xx
         return response.json(), response.status_code
     except requests.exceptions.RequestException as e:

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, render_template
-from llm_service import call_jan_api
+from llm_service import call_jan_api, get_models
 
 # Creamos un Blueprint. El primer argumento es el nombre del blueprint,
 # y el segundo es el nombre del módulo o paquete, que Flask usa para localizar recursos.
@@ -14,11 +14,12 @@ def ask_model():
 
     # Obtenemos el prompt del cuerpo JSON de la petición
     prompt = request.json.get("prompt", "Tell me a joke.")
+    model = request.json.get("model", "gemma-3-12b-it-IQ4_XS") # Usamos el modelo del request o uno por defecto
 
     # Cuerpo de la petición
     data = {
         # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible en Jan
-        "model": "gemma-3-12b-it-IQ4_XS", # Asegúrate que este modelo esté disponible en Jan
+        "model": model,
         "messages": [
             {"role": "user", "content": prompt}
         ]
@@ -44,4 +45,14 @@ def ask_model_image():
     }
     # Reutilizamos la misma función de servicio
     response_data, status_code = call_jan_api(data)
+    return jsonify(response_data), status_code
+
+@chat_bp.route("/models", methods=['GET'])
+def list_models():
+    """
+    Endpoint para obtener la lista de modelos disponibles desde Jan.AI.
+    """
+    # Llamamos a la función de nuestro servicio para obtener los modelos
+    response_data, status_code = get_models()
+    
     return jsonify(response_data), status_code
