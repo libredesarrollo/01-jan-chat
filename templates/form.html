@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat con el LLM</title>
+    <!-- Librerías para renderizar Markdown y resaltar código -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         html, body {
             height: 100%;
@@ -33,8 +38,11 @@
             border-radius: 18px;
             margin-bottom: 10px;
             max-width: 80%;
-            line-height: 1.4;
+            line-height: 1;
             white-space: pre-wrap;
+        }
+        .message p {
+            margin: 0;
         }
         .user-message {
             background-color: #0084ff;
@@ -51,6 +59,20 @@
             color: #c62828;
             align-self: center;
         }
+        /* Estilos para el código resaltado */
+        .ai-message pre {
+            background-color: #2d2d2d; /* Fondo oscuro para el bloque de código */
+            color: #f8f8f2; /* Texto claro */
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto; /* Scroll horizontal si el código es muy largo */
+            white-space: pre;
+        }
+        .ai-message code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
         #input-area {
             display: flex;
             padding: 10px;
@@ -111,9 +133,21 @@
         const addMessage = (text, sender, addToHistory = true) => {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message', `${sender}-message`);
-            messageElement.textContent = text;
+
+            if (sender === 'ai') {
+                // Si el mensaje es de la IA, lo procesamos como Markdown.
+                // Esto convertirá los bloques de código ``` a <pre><code>
+                messageElement.innerHTML = marked.parse(text);
+                // Aplicamos el resaltado de sintaxis a los nuevos bloques de código
+                messageElement.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            } else {
+                // Para los mensajes del usuario, solo mostramos el texto plano
+                messageElement.textContent = text;
+            }
+
             messageList.appendChild(messageElement);
-            // Scroll automático al último mensaje
             messageList.scrollTop = messageList.scrollHeight;
 
             if (addToHistory) {
