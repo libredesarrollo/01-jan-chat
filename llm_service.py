@@ -2,13 +2,13 @@ import requests
 
 # Constantes para la configuración de la API de Jan.AI
 
-JAN_BASE_URL = "http://127.0.0.1:1337/v1"
-CHAT_COMPLETIONS_URL = f"{JAN_BASE_URL}/chat/completions"
-MODELS_URL = f"{JAN_BASE_URL}/models"
+LLM_BASE_URL = "http://127.0.0.1:1337/v1"
+CHAT_COMPLETIONS_URL = f"{LLM_BASE_URL}/chat/completions"
+MODELS_URL = f"{LLM_BASE_URL}/models"
 
-JAN_API_KEY = "12345"  # La clave de autorización
+LLM_API_KEY = "12345"  # La clave de autorización, solo para Jan IA, en LM Studio NO hace falta
 
-def call_jan_api(data):
+def call_llm_api(data):
     """
     Realiza una llamada POST a la API de chat de Jan.AI.
 
@@ -21,7 +21,7 @@ def call_jan_api(data):
     """
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {JAN_API_KEY}"
+        "Authorization": f"Bearer {LLM_API_KEY}"
     }
 
     try:
@@ -45,7 +45,7 @@ def get_models():
                En caso de error de conexión, devuelve un diccionario de error y 500.
     """
     headers = {
-        "Authorization": f"Bearer {JAN_API_KEY}"
+        "Authorization": f"Bearer {LLM_API_KEY}"
     }
 
     try:
