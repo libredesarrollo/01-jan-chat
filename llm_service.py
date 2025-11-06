@@ -1,6 +1,6 @@
 import requests
 
-# Constantes para la configuración de la API de Jan.AI
+# Constantes para la configuración de la API LLM Local
 
 LLM_BASE_URL = "http://127.0.0.1:1337/v1"
 CHAT_COMPLETIONS_URL = f"{LLM_BASE_URL}/chat/completions"
@@ -10,7 +10,7 @@ LLM_API_KEY = "12345"  # La clave de autorización, solo para Jan IA, en LM Stud
 
 def call_llm_api(data):
     """
-    Realiza una llamada POST a la API de chat de Jan.AI.
+    Realiza una llamada POST a la API de chat LLM Local.
 
     Args:
         data (dict): El cuerpo de la petición para la API.
@@ -31,14 +31,14 @@ def call_llm_api(data):
     except requests.exceptions.RequestException as e:
         # Captura errores de conexión, timeouts, etc.
         error_message = {
-            "error": f"Error al contactar el servidor de Jan.AI: {e}",
+            "error": f"Error al contactar el servidor LLM Local: {e}",
             "body": str(e)
         }
         return error_message, 500
 
 def get_models():
     """
-    Obtiene la lista de modelos disponibles desde la API de Jan.AI.
+    Obtiene la lista de modelos disponibles desde la API LLM Local.
 
     Returns:
         tuple: Una tupla conteniendo la respuesta JSON y el código de estado.
@@ -55,7 +55,7 @@ def get_models():
     except requests.exceptions.RequestException as e:
         # Captura errores de conexión, timeouts, etc.
         error_message = {
-            "error": f"Error al contactar el servidor de Jan.AI: {e}",
+            "error": f"Error al contactar el servidor LLM Local: {e}",
             "body": str(e)
         }
         return error_message, 500

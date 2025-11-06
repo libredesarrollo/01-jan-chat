@@ -156,6 +156,8 @@
         const messageList = document.getElementById('message-list');
         const modelSelect = document.getElementById('model-select');
         const attachBtn = document.getElementById('attach-btn');
+
+        // prompt con imagen
         const imageInput = document.getElementById('image-input');
         const imagePreviewContainer = document.getElementById('image-preview-container');
         
@@ -165,6 +167,7 @@
 
         attachBtn.addEventListener('click', () => imageInput.click());
 
+        // prompt con imagen
         imageInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {

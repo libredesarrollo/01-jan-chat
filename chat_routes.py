@@ -21,6 +21,10 @@ def ask_model():
         # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible en Jan
         "model": model,
         "messages": [
+            {
+                "role": "system",
+                "content": "Eres un asistente útil que siempre responde en español, sin importar el idioma del usuario."
+            },
             {"role": "user", "content": prompt}
         ]
     }
@@ -67,3 +71,5 @@ def list_models():
     response_data, status_code = get_models()
     
     return jsonify(response_data), status_code
+
+
