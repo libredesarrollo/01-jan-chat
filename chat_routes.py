@@ -16,6 +16,27 @@ def ask_model():
     prompt = request.json.get("prompt", "Tell me a joke.")
     model = request.json.get("model", "gemma-3-12b-it-IQ4_XS") # Usamos el modelo del request o uno por defecto
 
+    history = request.json.get("history", [])
+    # print(history)
+    
+    messagesHistory = []
+    for item in history:
+        messagesHistory.append({"role": item["role"], "content": item["content"]})
+    
+    # for item in messagesHistory:
+    #     # print(item.get('role'))
+    #     print(item)
+    
+    messagesHistory = [
+        msg for msg in messagesHistory
+        if isinstance(msg, dict)
+        and msg.get("role") in ["system", "user", "assistant"]
+        and isinstance(msg.get("content"), str)
+        and msg.get("content").strip() != ""
+    ]
+    
+    print(*messagesHistory)
+    
     # Cuerpo de la petición
     data = {
         # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible en Jan
@@ -23,9 +44,12 @@ def ask_model():
         "messages": [
             {
                 "role": "system",
-                "content": "Eres un asistente útil que siempre responde en español, sin importar el idioma del usuario."
+                "content": "Eres un asistente útil que siempre responde en español, sin importar el idioma del usuario"
             },
-            {"role": "user", "content": prompt}
+            # {"role": "assistant", "content": "Antes analisastes la imagen de elon"},
+            # Usamos el operador de propagación para incluir todos los mensajes del historial
+            *messagesHistory,
+            {"role": "user", "content": prompt},
         ]
     }
 
@@ -71,5 +95,3 @@ def list_models():
     response_data, status_code = get_models()
     
     return jsonify(response_data), status_code
-
-

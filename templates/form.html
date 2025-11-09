@@ -231,6 +231,17 @@
                 chatHistory.forEach(msg => addMessage(msg.text, msg.sender, false));
             }
         };
+        
+        const getLoadHistory = () => {
+            const messages = chatHistory.map(msg => {
+                return {
+                    role: msg.sender === 'user' ? 'user' : 'assistant',
+                    content: msg.text
+                };
+            });
+           return messages
+        };
+        
 
         const loadModels = async () => {
             try {
@@ -266,6 +277,7 @@
             let endpoint = '/ask';
             let payload = {
                 prompt: chatHistory[chatHistory.length - 1].text,
+                history: getLoadHistory(),
                 model: selectedModel,
             };
 
