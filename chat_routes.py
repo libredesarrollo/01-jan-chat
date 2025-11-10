@@ -39,13 +39,17 @@ def ask_model():
     
     # Cuerpo de la petición
     data = {
-        # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible en Jan
+        # "model": "openai/gpt-oss-20b", # Asegúrate que este modelo esté disponible
         "model": model,
         "messages": [
             {
                 "role": "system",
                 "content": "Eres un asistente útil que siempre responde en español, sin importar el idioma del usuario"
             },
+            # {
+            #     "role": "user",
+            #     "content": "Antes analizaste la imagen de Elon."
+            # },
             # {"role": "assistant", "content": "Antes analisastes la imagen de elon"},
             # Usamos el operador de propagación para incluir todos los mensajes del historial
             *messagesHistory,
