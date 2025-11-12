@@ -2,7 +2,9 @@ import requests
 
 # Constantes para la configuración de la API LLM Local
 
-LLM_BASE_URL = "http://127.0.0.1:1337/v1"
+# LLM_BASE_URL = "http://127.0.0.1:1337/v1"
+LLM_BASE_URL = "http://host.docker.internal:1337/v1"
+
 CHAT_COMPLETIONS_URL = f"{LLM_BASE_URL}/chat/completions"
 MODELS_URL = f"{LLM_BASE_URL}/models"
 
@@ -49,8 +51,12 @@ def get_models():
     }
 
     try:
+        
+        # response = requests.get('http://127.0.0.1:8000/store/product')
+        # response = requests.get('http://host.docker.internal:8000/store/product')
         response = requests.get(MODELS_URL, headers=headers)
         response.raise_for_status()  # Lanza una excepción para respuestas 4xx/5xx
+        # return response.text, response.status_code
         return response.json(), response.status_code
     except requests.exceptions.RequestException as e:
         # Captura errores de conexión, timeouts, etc.
